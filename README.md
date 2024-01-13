@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # tennis-scoreboard
 tennis-scoreboard-service: REST API, ASP.NET Core, MySQL.Data, ConnectionPool, MySQL
 
@@ -55,6 +54,3 @@ tennis-scoreboard-service: REST API, ASP.NET Core, MySQL.Data, ConnectionPool, M
 ## MVCS
 
 MVCS - архитектурный паттерн, особенно хорошо подходящий под реализацию подобных приложений. 
-=======
-# tennis-scoreboard
->>>>>>> d37fdeae32cb03e66f46a8d569a8e1260b30a7b7
