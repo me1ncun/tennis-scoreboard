@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33815.320
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "backend", "tennis-scoreboard\backend.csproj", "{1DC24324-7E3F-4912-81E4-A445E75F8B0C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "frontend", "frontend\frontend.csproj", "{ED5F97EF-26E6-42B2-8EB4-4F3871077E0C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1DC24324-7E3F-4912-81E4-A445E75F8B0C} = {1DC24324-7E3F-4912-81E4-A445E75F8B0C}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1DC24324-7E3F-4912-81E4-A445E75F8B0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DC24324-7E3F-4912-81E4-A445E75F8B0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DC24324-7E3F-4912-81E4-A445E75F8B0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DC24324-7E3F-4912-81E4-A445E75F8B0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED5F97EF-26E6-42B2-8EB4-4F3871077E0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED5F97EF-26E6-42B2-8EB4-4F3871077E0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED5F97EF-26E6-42B2-8EB4-4F3871077E0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED5F97EF-26E6-42B2-8EB4-4F3871077E0C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {277A43E1-745B-4694-B2AC-B9394AD5CB4B}
+	EndGlobalSection
+EndGlobal

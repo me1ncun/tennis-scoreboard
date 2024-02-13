@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\tennis-scoreboard.props" />
+</Project>

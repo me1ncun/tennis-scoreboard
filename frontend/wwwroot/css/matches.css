@@ -1,0 +1,172 @@
+﻿.main-block {
+    margin: auto;
+    margin-top: 100px;
+    height: 200px;
+    background-color: rgb(22, 76, 83);
+    padding-bottom: 400px;
+    padding-left: 100px;
+    padding-right: 100px;
+    padding-top: 40px;
+    border-radius: 50px;
+    overflow-y: hidden;
+}
+
+.title {
+    font-size: 30px;
+    color: white;
+    margin-bottom: 20px;
+    font-weight: 800;
+}
+
+.table-header {
+    color: rgb(29, 29, 29);
+    background-color: rgb(24, 136, 136);
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.id, .player {
+    background-color: rgb(22, 76, 83);
+    color: white;
+}
+
+.table-header, .id, .player {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    border-color: rgb(97, 125, 133);
+    border-style: solid;
+    border-width: 2px;
+    margin: 1px;
+    width: 200px;
+    height: 50px;
+    font-weight: 800;
+    overflow: hidden;
+}
+
+.table, .title {
+    display: flex;
+    justify-content: center;
+}
+
+.search-button, .clear-button, .next-button, .prev-button {
+    display: block;
+    background-color: rgb(8, 25, 27);
+    color: white;
+    padding: 8px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    border-radius: 10px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(22, 76, 83);
+    cursor: pointer;
+    overflow: hidden;
+}
+
+    .search-button:hover, .clear-button:hover, .next-button:hover, .prev-button:hover {
+        opacity: 0.8;
+    }
+
+    .search-button:active, .clear-button:active, .next-button:active, .prev-button:active {
+        background-color: rgb(41, 37, 37);
+        color: rgb(46, 147, 160);
+        opacity: 0.6;
+    }
+
+div {
+    font-size: 20;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.search-by-name-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.name {
+    width: 80px;
+    display: inline-block;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.search-bar {
+    width: 400px;
+    height: 36px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+}
+
+.search-button, .clear-button, .next-button, .prev-button {
+    margin-left: 10px;
+    padding-left: 60px;
+    padding-right: 60px;
+    justify-content: center;
+    display: flex;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 100px;
+    margin-top: 40px;
+    align-items: center;
+}
+
+.current-page {
+    background-color: rgba(21, 22, 22, 0.89);
+    padding: 5px 25px;
+    border-style: solid;
+    border-radius: 10px;
+    border-color: rgb(22, 76, 83);
+    color: white;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-weight: 500;
+    font-size: 30px;
+}
+
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    font-weight: 100;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    opacity: 0.5;
+}
+
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    font-weight: 100;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    opacity: 0.5;
+}
+
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    font-weight: 100;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    opacity: 0.5;
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    font-weight: 100;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    opacity: 0.5;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+    font-weight: 100;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    opacity: 0.5;
+}
+
+::placeholder { /* Most modern browsers support this now. */
+    font-weight: 100;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    opacity: 0.5;
+}
