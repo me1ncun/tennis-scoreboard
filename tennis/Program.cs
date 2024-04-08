@@ -1,7 +1,14 @@
+using frontend.Repositories;
+using tennis.Database.Repositories.Implementation;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddTransient<IPlayerRepository, PlayerRepository>();
+builder.Services.AddTransient<IPlayerService, PlayerService>();
+builder.Services.AddTransient<IMatchesRepository, MatchesRepository>();
 
 var app = builder.Build();
 
