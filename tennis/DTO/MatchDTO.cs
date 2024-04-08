@@ -1,10 +1,13 @@
-﻿namespace tennis_scoreboard.DTO
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace tennis_scoreboard.DTO
 {
     public class MatchDTO
     {
-        public int ID { get; set; }
-        public int? Player1ID { get; set; }
-        public int? Player2ID { get; set;}
-        public int? WinnerID { get; set;}
+        [Required(ErrorMessage = "Player1 Name is required.")]
+        public string Player1Name { get; set; }
+        [Required(ErrorMessage = "Player2 Name is required.")]
+        public string Player2Name { get; set; }
+        
     }
 }
