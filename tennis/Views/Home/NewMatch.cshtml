@@ -1,0 +1,26 @@
+﻿@model tennis_scoreboard.DTO.MatchDTO
+@{
+    ViewData["Title"] = "New Game";
+}
+
+<link rel="stylesheet" href="~/css/new-match.css" asp-append-version="true"/>
+
+<body>
+<div class="new-game-inputs">
+    <form class="start-form" method="post" asp-controller="Home" asp-action="NewMatch">
+        <div class="player">
+            <label class="player-name" asp-for="Player1Name">Player name 1:</label><br>
+            <input asp-for="Player1Name" type="text" class="player-name-input" id="player-name-1" placeholder="Steve" name="Player1Name">
+            <span asp-validation-for="Player1Name" class="text-danger"></span>
+            </div>
+        <div class="player">
+            <label class="player-name" asp-for="Player2Name">Player name 2:</label><br>
+            <input asp-for="Player2Name" type="text" class="player-name-input" id="player-name-2" placeholder="John" name="Player2Name">
+            <span asp-validation-for="Player2Name" class="text-danger"></span>
+            </div>
+        <div class="start-button-div">
+            <button class="start-button" type="submit">Start</button>
+        </div>
+    </form>
+</div>
+</body>
