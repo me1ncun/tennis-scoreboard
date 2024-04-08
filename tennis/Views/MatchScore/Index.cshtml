@@ -1,0 +1,75 @@
+﻿@{
+    ViewData["Title"] = "Match Score";
+}
+
+<link rel="stylesheet" href="~/css/match-score.css" asp-append-version="true" />
+<body>
+    <div class="main-block">
+        <div class="title">Match score</div>
+
+        <div class="table">
+            <div class="players">
+                <div class="table-header">PLAYERS</div>
+            </div>
+            <div class="sets">
+                <div class="table-header">SETS</div>
+            </div>
+
+            <div class="games">
+                <div class="table-header">GAMES</div>
+               
+            </div>
+
+            <div class="points">
+                <div class="table-header">POINTS</div>
+
+            </div>
+        </div>
+        <form id="add-point" class="hidden-forms" method="post"
+              action="/match-score?uuid=@ViewBag.MatchId">
+            ">
+        </form>
+
+        <div class="add-point-button-div">
+            <button form="add-point" name="player" value="<%=player1.getId()%>" type="submit" class="add-point-button">
+                Player 1 wins
+                point!
+            </button>
+            <button form="add-point" name="player" value="<%=player2.getId()%>" type="submit" class="add-point-button">
+                Player 2 wins
+                point!
+            </button>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            const host = "https://localhost:7236"
+
+            $.ajax({
+                url: `${host}/match-score/uuid=@ViewBag.MatchId`,
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    const table = $('.table');
+
+                    // Assuming data is an array of objects with properties: player, sets, games, points
+                    $.each(data, function (index, entry) {
+                        // Create a row for each entry in the data
+                        const row = $('<div class="table-row"></div>');
+
+                        // Append data to each column
+                        row.append($('<div class="players-column"></div>').text(entry.player));
+                        row.append($('<div class="sets-column"></div>').text(entry.sets));
+                        row.append($('<div class="games-column"></div>').text(entry.games));
+                        row.append($('<div class="points-column"></div>').text(entry.points));
+
+                        // Append the row to the table
+                        table.append(row);
+                    });
+                }
+            });
+
+        });
+    </script>
+</body> 

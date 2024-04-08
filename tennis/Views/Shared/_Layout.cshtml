@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - tennis-board</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/frontend.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <div class="header">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light justify-content-center">
+            <div class="flex-container-header">
+                <a class="nav-link text-white font-weight-bold" asp-area="" asp-controller="Home" asp-action="Index"><img src="img/logo.png" style="width:40px; height:40px; margin-right:40px;"></a>
+                <a class="nav-link text-white font-weight-bold" asp-area="" asp-controller="NewMatch" asp-action="Index">New game</a>
+                <span class="mx-5"></span>
+                <a class="nav-link text-white font-weight-bold" asp-area="" asp-controller="Matches" asp-action="Index">Finished matches</a>
+            </div>
+        </nav>
+        </div>
+    </header>
+    <div class="container">
+            @RenderBody()
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
