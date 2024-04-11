@@ -1,0 +1,61 @@
+﻿@model tennis_scoreboard.Models.NewMatch
+
+@{
+    ViewData["Title"] = "Match Score";
+}
+
+<link rel="stylesheet" href="~/css/match-score.css" asp-append-version="true"/>
+<body>
+<div class="main-block">
+    <div class="title">Match score</div>
+
+    <div class="table">
+        <div class="players">
+            <div class="table-header">PLAYERS</div>
+            <div class="table-header">@Model.Player1</div>
+            <div class="table-header">@Model.Player2</div>
+        </div>
+        <div class="sets">
+            <div class="table-header">SETS</div>
+            <div class="table-header">@Model.SetPlayer1.counter</div>
+            <div class="table-header">@Model.SetPlayer2.counter</div>
+        </div>
+
+        <div class="games">
+            <div class="table-header">GAMES</div>
+            <div class="table-header">@Model.GamePlayer1.amount</div>
+            <div class="table-header">@Model.GamePlayer2.amount</div>
+        </div>
+
+        <div class="points">
+            <div class="table-header">POINTS</div>
+            <div class="table-header">@Model.ScorePlayer1.amount</div>
+            <div class="table-header">@Model.ScorePlayer2.amount</div>
+        </div>
+    </div>
+
+    <div class="align-items-center justify-content-between d-flex">
+        <form method="post" asp-controller="Home" asp-action="MatchScore">
+            <div class="add-point-button-div">
+                <button type="submit" class="add-point-button">
+                    Player 1 wins
+                    point!
+                </button>
+            </div>
+            <input type="hidden" name="opponent" value=@Model.ScorePlayer2.amount />
+            <input type="hidden" name="player" value="Player1" />
+        </form>
+
+        <form method="post" asp-controller="Home" asp-action="MatchScore">
+            <div class="add-point-button-div">
+                <button type="submit" class="add-point-button">
+                    Player 2 wins
+                    point!
+                </button>
+            </div>
+            <input type="hidden" name="opponent" value=@Model.ScorePlayer1.amount />
+            <input type="hidden" name="player" value="Player2" />
+        </form>
+    </div>
+</div>
+</body>

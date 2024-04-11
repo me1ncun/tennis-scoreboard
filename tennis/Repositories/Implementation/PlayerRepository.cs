@@ -6,26 +6,26 @@ namespace tennis.Database.Repositories.Implementation;
 
 public class PlayerRepository : IPlayerRepository
 {
-    public void Register(string name) 
+    public void Register(string name)
     {
-        using (var connection = AppDbContext.CreateConnection())
+        var playerExist = GetByName(name);
+        if(playerExist != null)
         {
-            try
-            {
-                connection.Query("INSERT INTO [Players] (Name) VALUES (@n);", new { n = name });
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            Console.WriteLine("User already exists");
         }
-    }
-    
-    public bool Exists(string name)
-    {
-        using (var connection = AppDbContext.CreateConnection())
+        else
         {
-            return connection.QueryFirstOrDefault<Player>("SELECT * FROM [Players] WHERE Name = @n;", new { n = name }) != null;
+            using (var connection = AppDbContext.CreateConnection())
+            {
+                try
+                {
+                    connection.Query("INSERT INTO [Players] (Name) VALUES (@n);", new { n = name });
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }
         }
     }
     
