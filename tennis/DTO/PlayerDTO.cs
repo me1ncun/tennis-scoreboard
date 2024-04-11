@@ -1,5 +1,4 @@
 ﻿using tennis.Score.Score_system;
-using Point = System.Drawing.Point;
 
 namespace tennis_scoreboard.DTO;
 
