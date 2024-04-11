@@ -2,10 +2,10 @@
 
 public class Set
 {
-    public int counter { get; set; } = 0;
+    public int amount { get; set; } = 0;
     
     public void IncreaseCounter()
     {
-        counter++;
+        amount++;
     }
 }
