@@ -2,6 +2,7 @@
 {
     public class Match
     {
+        public int ID { get; set; }
         public int Player1 { get; set; }
         public int Player2 { get; set; }
         public int Winner { get; set; }
