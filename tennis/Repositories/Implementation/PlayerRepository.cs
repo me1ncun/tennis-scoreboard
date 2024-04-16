@@ -8,7 +8,7 @@ public class PlayerRepository : IPlayerRepository
 {
     public void Register(string name)
     {
-        var playerExist = GetByName(name);
+        var playerExist = GetPlayerByName(name);
         if(playerExist != null)
         {
             Console.WriteLine("User already exists");
@@ -29,7 +29,7 @@ public class PlayerRepository : IPlayerRepository
         }
     }
     
-    public List<Player> GetAll()
+    public List<Player> GetAllPlayers()
     {
         using (var connection = AppDbContext.CreateConnection())
         {
@@ -37,7 +37,7 @@ public class PlayerRepository : IPlayerRepository
         }
     }
     
-    public Player GetByName(string name)
+    public Player GetPlayerByName(string name)
     {
         using (var connection = AppDbContext.CreateConnection())
         {
