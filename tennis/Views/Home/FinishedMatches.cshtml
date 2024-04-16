@@ -1,202 +1,75 @@
-﻿@model List<tennis_scoreboard.Models.Match>
+﻿@using tennis_scoreboard.Models
+@*@model List<tennis_scoreboard.Models.Match>*@
+@model tennis.Models.MatchModel
+
 @{
     ViewData["Title"] = "Matches";
 }
 
-<link rel="stylesheet" href="~/css/matches.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/matches.css" asp-append-version="true"/>
 
 <body>
-    <div class="main-block">
-        <div class="title">Finished matches</div>
-        <div class="search-by-name-box">
+<div class="main-block">
+    <div class="title">Finished matches</div>
+    <div class="search-by-name-box">
+        <form id="searchForm" method="post" asp-controller="Home" asp-action="FinishedMatches">
             <p class="name">Name: </p>
-            <form id="searchForm">
-                <input type="hidden" name="page" value="1">
-                <input id="playerNameInput" name="filter_by_player_name" class="search-bar"
-                       placeholder="Steve">
-                <button type="button" class="search-button" onclick="validateSearch()">Search</button>
-            </form>
+            <input type="hidden" name="page" value="1">
+            <input id="playerNameInput" name="searchedPlayer" class="search-bar"
+                   placeholder="Steve">
+            <button type="submit" class="search-button">Search</button>
+        </form>
+        <button form="clearForm" class="clear-button" onclick="clearSearch()">Clear</button>
+    </div>
+    <div class="table">
+        <table>
+            <tr>
+                <td><div class="table-header">Match ID</div></td>
+                <td><div class="table-header">Player 1</div></td>
+                <td><div class="table-header">Player 2</div></td>
+                <td><div class="table-header">Winner</div></td>
+            </tr>
 
-            @*<script>
-                function validateSearch() {
-                    var playerName = document.getElementById("playerNameInput").value;
-                    if (playerName === "") {
-                        alert("Please enter a player name");
-                        return false;
-                    }
-                    else {
-                        loadSearchMatches();
-                    }
-                }
-
+            @for (int i = 0; i < Model.Matches.Count(); i++)
+            {
+                <tr>
+                    <td><div class="id-column"><div class="table-header">@i</div></div></td>
+                    <td><div class="player1-column"><div class="table-header">@Model.Matches[i].Player1Name</div></div></td>
+                    <td> <div class="player2-column"><div class="table-header">@Model.Matches[i].Player2Name</div></div></td>
+                    <td><div class="winner-column"><div class="table-header">@Model.Matches[i].WinnerName</div></div></td>
+                </tr>
+            }
+        </table>
+    </div>
+    
+        <script>
                 function clearSearch() {
                     document.getElementById("playerNameInput").value = "";
                 }
-
-                function getMatchNameByID(matchID) {
-                    var match = {
-                        "Id": parseInt(matchID)
-                    };
-
-                    return new Promise(function (resolve, reject) {
-                        $.ajax({
-                            url: 'https://localhost:7236/getPlayerNameById?id=' + match.Id,
-                            type: 'GET',
-                            contentType: 'application/x-www-form-urlencoded',
-                            success: function (data, textStatus, xhr) {
-                                // Обработка успешного запроса
-                                console.log('Task:', data);
-                                resolve(data); // Резолвим Promise с полученными данными
-                            },
-                            error: function (xhr, textStatus, errorThrown) {
-                                console.log('Error in Operation');
-                                reject(errorThrown); // Реджектим Promise с ошибкой
-                            }
-                        });
-                    });
-                };
                 
-
-                document.addEventListener("DOMContentLoaded", async function (event) {
-                    const host = "https://localhost:7236";
-                    let currentPage = 1;
-                    const matchesPerPage = 5; // Adjust as needed
-
-                    async function renderMatches(data, page) {
-                        const startIndex = (page - 1) * matchesPerPage;
-                        const endIndex = startIndex + matchesPerPage;
-                        const pageMatches = data.slice(startIndex, endIndex);
-
-                        for (var i = 0; i < pageMatches.length; i++) {
-                            var match = pageMatches[i];
-                            var matchID = `<div class="table-header">${match.id}</div>`;
-                            var player1Name = `<div class="table-header">${await getMatchNameByID(match.player1ID)}</div>`;
-                            var player2Name = `<div class="table-header">${await getMatchNameByID(match.player2ID)}</div>`;
-                            var winnerID = `<div class="table-header">${match.winnerID}</div>`;
-
-                            // Append the new row to the table
-                            $(".id-column-values").append(matchID);
-                            $(".player1-column-values").append(player1Name);
-                            $(".player2-column-values").append(player2Name);
-                            $(".winner-column-values").append(winnerID);
-                        }
-                    }
-
-                    async function loadMatches(page) {
-                        $.ajax({
-                            url: `${host}/getAllMatches`,
-                            type: "GET",
-                            contentType: "application/json",
-                            success: async function (data, textStatus, xhr) {
-                                await renderMatches(data, page);
-                                $("#page-number").text(page);
-                            },
-                            error: function (xhr, textStatus, errorThrown) {
-                                console.log('Error in Operation');
-                            }
-                        });
-                    }
-
-                    $("#prev-button").click(function () {
-                        if (currentPage > 1) {
-                            currentPage--;
-                            $(".id-column-values, .player1-column-values, .player2-column-values, .winner-column-values").empty();
-                            loadMatches(currentPage);
-                        }
-                    });
-
-                    $("#next-button").click(function () {
-                        // Assuming data is not infinite
-                        currentPage++;
-                        $(".id-column-values, .player1-column-values, .player2-column-values, .winner-column-values").empty();
-                        loadMatches(currentPage);
-                    });
-
-                    // Initial load
-                    loadMatches(currentPage);
-                });
-                
-
-
-                function loadSearchMatches() {
-
-                    $(".id-column-values, .player1-column-values, .player2-column-values, .winner-column-values").empty();
-                    console.log(document.getElementById("playerNameInput").value);
-
-                    const host = "https://localhost:7236";
-                    var playerName = document.getElementById("playerNameInput").value;
-                    console.log(playerName);
-                    async function renderMatches(data) {
-                        for (var i = 0; i < data.length; i++) {
-                            var match = data[i];
-
-                            var matchID = `<div class="table-header">${match.id}</div>`;
-                            var player1Name = `<div class="table-header">${await getMatchNameByID(match.player1ID)}</div>`;
-                            var player2Name = `<div class="table-header">${await getMatchNameByID(match.player2ID)}</div>`;
-                            var winnerID = `<div class="table-header">${match.winnerID}</div>`;
-
-                            // Append the new row to the table
-                            $(".id-column").append(matchID);
-                            $(".player1-column").append(player1Name);
-                            $(".player2-column").append(player2Name);
-                            $(".winner-column").append(winnerID);
-                        }
-                    }
-                    $.ajax({
-                        url: `${host}/getMatchesByName?name=`+playerName,
-                        type: "GET",
-                        contentType: "application/json",
-                        success: async function (data, textStatus, xhr) {
-                            await renderMatches(data);
-                        },
-                        error: function (xhr, textStatus, errorThrown) {
-                            console.log('Error in Operation');
-                        }
-                    });
-                };*@
-
-            @*</script>*@
-
-            <button form="clearForm" class="clear-button" onclick="clearSearch()">Clear</button>
-        </div>
-        <div class="table">
-            <div class="id-column">
-                <div class="table-header">Match ID</div>
-                       @for(int i = 0; i< Model.Count(); i++)
-                        {
-                            <div class="table-header">@i</div>
-                        }
-
-            </div>
-            <div class="player1-column">
-                <div class="table-header">Player 1</div>
-                @foreach(var match in Model)
-                        {
-                            <div class="table-header">@match.Player1Name</div>
-                        }
-
-            </div>
-            <div class="player2-column">
-                <div class="table-header">Player 2</div>
-                       @foreach(var match in Model)
-                        {
-                            <div class="table-header">@match.Player2Name</div>
-                        }
-
-            </div>
-            <div class="winner-column">
-                <div class="table-header">Winner</div>
-                @foreach(var match in Model)
-                        {
-                            <div class="table-header">@match.WinnerName</div>
-                        }
-            </div>
-        </div>
-
-        <div class="pagination">
-            <button id="prev-button" class="next-button">Prev</button>
-            <span id="page-number">1</span>
-            <button id="next-button" class="next-button">Next</button>
-        </div>
-    </div>
+                function PagerClick(index) {
+                    document.getElementById("hfCurrentPageIndex").value = index;
+                    document.forms[0].submit();
+                }
+        </script>
+    
+    @*@if (Model.PageViewModel.HasPreviousPage)
+    {
+    <a asp-action="Index"
+       asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+       class="btn btn-outline-dark">
+        <i class="glyphicon glyphicon-chevron-left"></i>
+        Назад
+    </a>
+    }
+    @if (Model.PageViewModel.HasNextPage)
+    {
+    <a asp-action="Index"
+       asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+       class="btn btn-outline-dark">
+        Вперед
+        <i class="glyphicon glyphicon-chevron-right"></i>
+    </a>
+    }*@
+</div>
 </body>
