@@ -17,11 +17,11 @@ public class PlayerService: IPlayerService
     
     public List<Player> GetAll()
     {
-        return _playerRepository.GetAll();
+        return _playerRepository.GetAllPlayers();
     }
     
     public Player GetByName(string name)
     {
-        return _playerRepository.GetByName(name);
+        return _playerRepository.GetPlayerByName(name);
     }
 }
