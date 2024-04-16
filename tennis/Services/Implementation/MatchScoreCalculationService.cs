@@ -3,92 +3,186 @@ using Newtonsoft.Json;
 using tennis_scoreboard.DTO;
 using tennis_scoreboard.Models;
 using tennis.Database.Repositories.Implementation;
+using tennis.Enums;
 using tennis.Score.Score_system;
 
 namespace tennis.Database.Services;
 
 public class MatchScoreCalculationService
 {
-    private readonly MatchesRepository _matchesRepository;
+    private readonly MatchService _matchService;
     private readonly NewMatch _match;
-    public MatchScoreCalculationService(NewMatch match)
+    public MatchScoreCalculationService(NewMatch match, MatchService matchService)
     {
         _match = match;
-        _matchesRepository = new MatchesRepository();
+        _matchService = matchService;
+    }
+    
+    public void AddPointToWinnerOfGame(PlayerDTO winner, NewMatch match) {
+        switch (match.State) {
+            case State.GAME : {
+                if (winner == match.Player1)
+                {
+                    match.SetPointPlayerOne(IncreasePointPlayerInGame(match.GetPointPlayerOne()));
+                }
+                else
+                {
+                    match.SetPointPlayerTwo(IncreasePointPlayerInGame(match.GetPointPlayerTwo()));
+                }
+                break;
+            }
+            case State.ADVANTAGE : {
+                if (winner == match.Player1)
+                {
+                    match.SetPointPlayerOne(IncreasePointPlayerInAdvantage(match.GetPointPlayerOne()));
+                }
+                else
+                {
+                    match.SetPointPlayerTwo(IncreasePointPlayerInAdvantage(match.GetPointPlayerTwo()));
+                }
+                    break;
+            }
+            case State.TIE : {
+                if (winner == match.Player1)
+                {
+                    match.SetPointPlayerOne(IncreasePointPlayerInTie(match.GetPointPlayerOne()));
+                }
+                else
+                {
+                    match.SetPointPlayerTwo(IncreasePointPlayerInTie(match.GetPointPlayerTwo()));
+                }
+                    break;
+            }
+        }
+        UpdateGameScore(match);
+        UpdateGameStatus(match);
     }
 
-    public void IncreasePlayerScore(PlayerDTO player, PlayerDTO oppponent)
-    {
-        switch (player.Scores.amount)
-        {
-            case 0:
-                player.Scores.IncreaseCounter(15);
+    private int IncreasePointPlayerInGame(int playerPoint) {
+        if (playerPoint < 30) {
+            return playerPoint + 15;
+        } else {
+            return playerPoint + 10;
+        }
+    }
+
+    private int IncreasePointPlayerInAdvantage(int playerPoint) {
+        return playerPoint + 5;
+    }
+
+    private int IncreasePointPlayerInTie(int playerPoint) {
+        return ++playerPoint;
+    }
+
+
+    private void UpdateGameScore(NewMatch match) {
+        switch (match.State) {
+            case State.GAME: {
+                if (match.GetPointPlayerOne() == 50) {
+                    ResetPlayersPoints(match);
+                    IncreasePlayerGame(PlayerNumber.PLAYER_ONE, match);
+                } else if (match.GetPointPlayerTwo() == 50) {
+                    ResetPlayersPoints(match);
+                    IncreasePlayerGame(PlayerNumber.PLAYER_TWO, match);
+                }
+                if (match.GetGamePlayerOne() == 6 && match.GetGamePlayerTwo() < 5) {
+                    ResetPlayersGames(match);
+                    IncreasePlayerSet(PlayerNumber.PLAYER_ONE, match);
+                } else if (match.GetGamePlayerOne() == 7 && match.GetGamePlayerTwo() == 5) {
+                    ResetPlayersGames(match);
+                    IncreasePlayerSet(PlayerNumber.PLAYER_ONE, match);
+                } else if (match.GetGamePlayerTwo() == 6 && match.GetGamePlayerOne() < 5) {
+                    ResetPlayersGames(match);
+                    IncreasePlayerSet(PlayerNumber.PLAYER_TWO, match);
+                } else if (match.GetGamePlayerTwo() == 7 && match.GetGamePlayerOne() == 5) {
+                    ResetPlayersGames(match);
+                    IncreasePlayerSet(PlayerNumber.PLAYER_TWO, match);
+                }
                 break;
-            case 15:
-                player.Scores.IncreaseCounter(15);
+            }
+            case State.ADVANTAGE : {
+                if (match.GetPointPlayerOne() == 45 && match.GetPointPlayerTwo() == 45) {
+                    match.SetPointPlayerOne(40);
+                    match.SetPointPlayerTwo(40);
+                } else if (match.GetPointPlayerOne() == 50) {
+                    ResetPlayersPoints(match);
+                    IncreasePlayerGame(PlayerNumber.PLAYER_ONE, match);
+                    match.State = State.GAME;
+                } else if (match.GetPointPlayerTwo() == 50) {
+                    ResetPlayersPoints(match);
+                    IncreasePlayerGame(PlayerNumber.PLAYER_TWO, match);
+                    match.State = State.GAME;
+                }
                 break;
-            case 30:
-                player.Scores.IncreaseCounter(10);
+            }
+            case State.TIE : {
+                if (match.GetPointPlayerOne() == 7 && match.GetPointPlayerTwo() <= 5) {
+                    ResetPlayersPointsAndGames(match);
+                    IncreasePlayerSet(PlayerNumber.PLAYER_ONE, match);
+                    match.State = State.GAME;
+                } else if (match.GetPointPlayerTwo() == 7 && match.GetPointPlayerOne() <= 5) {
+                    ResetPlayersPointsAndGames(match);
+                    IncreasePlayerSet(PlayerNumber.PLAYER_TWO, match);
+                    match.State = State.GAME;
+                } else if (match.GetPointPlayerOne() >= 7 && (match.GetPointPlayerOne() - match.GetPointPlayerTwo() == 2)) {
+                    ResetPlayersPointsAndGames(match);
+                    IncreasePlayerSet(PlayerNumber.PLAYER_ONE, match);
+                    match.State = State.GAME;
+                } else if (match.GetPointPlayerTwo() >= 7 && (match.GetPointPlayerTwo() - match.GetPointPlayerOne() == 2)) {
+                    ResetPlayersPointsAndGames(match);
+                    IncreasePlayerSet(PlayerNumber.PLAYER_TWO, match);
+                    match.State = State.GAME;
+                }
                 break;
-            case 40:
-                CheckMatchWinner(player, oppponent);
-                CheckSetWinner(player, oppponent);
-                CheckGameWinner(player, oppponent);
+            }
+        }
+    }
+
+    private void UpdateGameStatus(NewMatch match) {
+        if (match.GetPointPlayerOne() == 40 && match.GetPointPlayerTwo() == 40) {
+            match.State = State.ADVANTAGE;
+        } else if (match.GetGamePlayerOne() == 6 && match.GetGamePlayerTwo() == 6) {
+            match.State = State.TIE;
+        } else if (match.GetSetPlayerOne() == 2 || match.GetSetPlayerTwo() == 2) {
+            match.State = State.FINISHED;
+            ResetPlayersPointsAndGames(match);
+        }
+    }
+
+    private void ResetPlayersPoints(NewMatch match) {
+        match.SetPointPlayerOne(0);
+        match.SetPointPlayerTwo(0);
+    }
+
+    private void ResetPlayersGames(NewMatch match) {
+        match.SetGamePlayerOne(0);
+        match.SetGamePlayerTwo(0);
+    }
+
+    private void ResetPlayersPointsAndGames(NewMatch match) {
+        match.SetPointPlayerOne(0);
+        match.SetPointPlayerTwo(0);
+        match.SetGamePlayerOne(0);
+        match.SetGamePlayerTwo(0);
+    }
+
+    private void IncreasePlayerGame(PlayerNumber playerNumber, NewMatch match) {
+        switch (playerNumber) {
+            case PlayerNumber.PLAYER_ONE: match.SetGamePlayerOne(match.GetGamePlayerOne() + 1);
                 break;
-            default: player.Scores.IncreaseCounter(1);
+
+            case PlayerNumber.PLAYER_TWO: match.SetGamePlayerTwo(match.GetGamePlayerTwo() + 1);
                 break;
         }
     }
-    public void CheckGameWinner(PlayerDTO player, PlayerDTO oppponent)
-    { 
-        if(oppponent.Scores.amount == player.Scores.amount && player.Scores.amount == 40) 
-        {
-            player.Scores.amount = 0;
-            _match.Player2.Scores.amount = 0;
-            
-            player.Scores.IncreaseCounter(1);
-        }
-        else if (oppponent.Scores.amount == 40)
-        {
-            oppponent.Games.IncreaseCounter();
-            oppponent.Scores.amount = 0;
-            _match.Player1.Scores.amount = 0;
-        }
-        else if (player.Scores.amount == 40)
-        {
-            player.Games.IncreaseCounter();
-            player.Scores.amount = 0;
-            _match.Player2.Scores.amount = 0;
-        }
-    }
-    
-    public void CheckSetWinner(PlayerDTO player, PlayerDTO oppponent)
-    {
-        if (player.Games.amount == 6 && oppponent.Games.amount < 5)
-        {
-            player.Sets.IncreaseCounter();
-            player.Games.amount = 0;
-            oppponent.Games.amount = 0;
-        }
-        else if (player.Games.amount == 7 && oppponent.Games.amount == 5)
-        {
-            player.Sets.IncreaseCounter();
-            player.Games.amount = 0;
-            oppponent.Games.amount = 0;
-        }
-    }
-    
-    public void CheckMatchWinner(PlayerDTO player, PlayerDTO oppponent)
-    {
-        if (player.Sets.amount == 2)
-        {
-            _matchesRepository.Create(player, oppponent, player);
-            _match.Player1 = player;
-        }
-        else if (oppponent.Sets.amount == 2)
-        {
-            _matchesRepository.Create(oppponent, player, oppponent);
-            _match.Player2 = oppponent;
+
+    private void IncreasePlayerSet(PlayerNumber playerNumber, NewMatch match) {
+        switch (playerNumber) {
+            case PlayerNumber.PLAYER_ONE : match.SetSetPlayerOne(match.GetSetPlayerOne() + 1);
+                break;
+
+            case PlayerNumber.PLAYER_TWO : match.SetSetPlayerTwo(match.GetSetPlayerTwo() + 1);
+                break;
         }
     }
     
