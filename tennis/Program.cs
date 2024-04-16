@@ -9,7 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddTransient<MatchScoreCalculationService>(NewMatch => new MatchScoreCalculationService(new NewMatch()));
+builder.Services.AddTransient<MatchService>();
+builder.Services.AddTransient<MatchScoreCalculationService>(NewMatch => new MatchScoreCalculationService(new NewMatch(), new MatchService(new MatchesRepository())));
 builder.Services.AddTransient<IPlayerRepository, PlayerRepository>();
 builder.Services.AddTransient<IPlayerService, PlayerService>();
 builder.Services.AddTransient<IMatchesRepository, MatchesRepository>();
