@@ -22,3 +22,4 @@
 ### Страница счёта матча - /match-score
 ![photo_2.jpg](Screenshots/Picture2.jpg)
 ### Страница сыгранных матчей - /finished-matches
+![photo_3.jpg](Screenshots/Picture3.jpg)
