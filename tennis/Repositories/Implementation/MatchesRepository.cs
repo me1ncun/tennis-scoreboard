@@ -12,7 +12,10 @@ public class MatchesRepository: IMatchesRepository
     {
         using (var connection = AppDbContext.CreateConnection())
         {
-            connection.Query<Match>("INSERT INTO [Matches] (Player1, Player2, Winner) VALUES (@p1, @p2, @w);", new { p1 = player1Id, p2 = player2Id, w = winnerId });
+            string query = @"INSERT INTO [Matches] (Player1, Player2, Winner)
+                                         VALUES (@p1, @p2, @w)";
+            
+            connection.Query<Match>(query, new { p1 = player1Id, p2 = player2Id, w = winnerId });
         }
     }
     
@@ -20,7 +23,9 @@ public class MatchesRepository: IMatchesRepository
     {
         using (var connection = AppDbContext.CreateConnection())
         {
-            return  connection.Query<Match>("SELECT * FROM [Matches];").ToList();
+            string query = "SELECT * FROM [Matches]";
+            
+            return  connection.Query<Match>(query).ToList();
         }
     }
     
@@ -28,7 +33,9 @@ public class MatchesRepository: IMatchesRepository
     {
         using (var connection = AppDbContext.CreateConnection())
         {
-            return connection.QueryFirstOrDefault<Match>("SELECT * FROM [Matches] WHERE Id = @i;", new { i = id });
+            string query = "SELECT * FROM [Matches] WHERE Id = @i";
+            
+            return connection.QueryFirstOrDefault<Match>(query, new { i = id });
         }
     }
     
@@ -36,7 +43,9 @@ public class MatchesRepository: IMatchesRepository
     {
         using (var connection = AppDbContext.CreateConnection())
         {
-            return connection.QueryFirstOrDefault<string>("SELECT Name FROM [Players] WHERE ID = @i;", new { i = id });
+            string query = "SELECT Name FROM [Players] WHERE ID = @i";
+            
+            return connection.QueryFirstOrDefault<string>(query, new { i = id });
         }
     }
     
@@ -44,7 +53,9 @@ public class MatchesRepository: IMatchesRepository
     {
         using (var connection = AppDbContext.CreateConnection())
         {
-            return connection.QueryFirstOrDefault<int>("SELECT [ID] FROM [Players] WHERE Name = @n;", new { n = name });
+            string query = "SELECT [ID] FROM [Players] WHERE Name = @n";
+            
+            return connection.QueryFirstOrDefault<int>(query, new { n = name });
         }
     }
 
@@ -56,8 +67,7 @@ public class MatchesRepository: IMatchesRepository
                          FROM Matches m 
                          INNER JOIN Players p ON m.Player1 = p.ID OR m.Player2 = p.ID
                          WHERE p.Name = @n";
-            /*string query = @"SELECT * FROM [Matches] WHERE Player1 = @userID OR Player2 = @userID;";*/
-
+            
             return connection.Query<Match>(query, new { n = name }).ToList();
         }
     }

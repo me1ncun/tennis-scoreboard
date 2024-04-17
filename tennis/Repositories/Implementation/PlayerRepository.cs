@@ -19,7 +19,8 @@ public class PlayerRepository : IPlayerRepository
             {
                 try
                 {
-                    connection.Query("INSERT INTO [Players] (Name) VALUES (@n);", new { n = name });
+                    string query = "INSERT INTO [Players] (Name) VALUES (@n);";
+                    connection.Query(query, new { n = name });
                 }
                 catch (Exception e)
                 {
@@ -33,7 +34,9 @@ public class PlayerRepository : IPlayerRepository
     {
         using (var connection = AppDbContext.CreateConnection())
         {
-            return connection.Query<Player>("SELECT * FROM [Players];").ToList();
+            string query = "SELECT * FROM [Players]";
+            
+            return connection.Query<Player>(query).ToList();
         }
     }
     
@@ -41,7 +44,9 @@ public class PlayerRepository : IPlayerRepository
     {
         using (var connection = AppDbContext.CreateConnection())
         {
-            return connection.QueryFirstOrDefault<Player>("SELECT * FROM [Players] WHERE Name = @n;", new { n = name });
+            string query = "SELECT * FROM [Players] WHERE Name = @n";
+            
+            return connection.QueryFirstOrDefault<Player>(query, new { n = name });
         }
     }
 }
