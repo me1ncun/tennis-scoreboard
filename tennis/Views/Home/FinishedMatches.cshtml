@@ -24,25 +24,67 @@
     <div class="table">
         <table>
             <tr>
-                <td><div class="table-header">Match ID</div></td>
-                <td><div class="table-header">Player 1</div></td>
-                <td><div class="table-header">Player 2</div></td>
-                <td><div class="table-header">Winner</div></td>
+                <td>
+                    <div class="table-header">Match ID</div>
+                </td>
+                <td>
+                    <div class="table-header">Player 1</div>
+                </td>
+                <td>
+                    <div class="table-header">Player 2</div>
+                </td>
+                <td>
+                    <div class="table-header">Winner</div>
+                </td>
             </tr>
 
             @for (int i = 0; i < Model.Matches.Count(); i++)
             {
                 <tr>
-                    <td><div class="id-column"><div class="table-header">@i</div></div></td>
-                    <td><div class="player1-column"><div class="table-header">@Model.Matches[i].Player1Name</div></div></td>
-                    <td> <div class="player2-column"><div class="table-header">@Model.Matches[i].Player2Name</div></div></td>
-                    <td><div class="winner-column"><div class="table-header">@Model.Matches[i].WinnerName</div></div></td>
+                    <td>
+                        <div class="id-column">
+                            <div class="table-header">@Model.Matches[i].ID</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="player1-column">
+                            <div class="table-header">@Model.Matches[i].Player1Name</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="player2-column">
+                            <div class="table-header">@Model.Matches[i].Player2Name</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="winner-column">
+                            <div class="table-header">@Model.Matches[i].WinnerName</div>
+                        </div>
+                    </td>
                 </tr>
             }
         </table>
     </div>
-    
-        <script>
+    <div class="d-flex justify-content-center align-content-center" style="color: white; font-size: larger;">
+        @if (ViewData["TotalPages"] != null && (int)ViewData["TotalPages"] > 1)
+        {
+            <div>
+                Page:
+                @for (int i = 1; i <= (int)ViewData["TotalPages"]; i++)
+                {
+                    if (i == (int)ViewData["CurrentPage"])
+                    {
+                        <span>@i</span>
+                    }
+                    else
+                    {
+                        <a style="text-decoration: none;" href="/finished-matches?page=@i&filter_by_player_name=@ViewData["PlayerName"]">@i</a>
+                    }
+                }
+            </div>
+        }
+    </div>
+    <script>
                 function clearSearch() {
                     document.getElementById("playerNameInput").value = "";
                 }
@@ -52,24 +94,5 @@
                     document.forms[0].submit();
                 }
         </script>
-    
-    @*@if (Model.PageViewModel.HasPreviousPage)
-    {
-    <a asp-action="Index"
-       asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
-       class="btn btn-outline-dark">
-        <i class="glyphicon glyphicon-chevron-left"></i>
-        Назад
-    </a>
-    }
-    @if (Model.PageViewModel.HasNextPage)
-    {
-    <a asp-action="Index"
-       asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
-       class="btn btn-outline-dark">
-        Вперед
-        <i class="glyphicon glyphicon-chevron-right"></i>
-    </a>
-    }*@
 </div>
 </body>
