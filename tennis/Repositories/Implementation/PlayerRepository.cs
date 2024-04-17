@@ -6,7 +6,7 @@ namespace tennis.Database.Repositories.Implementation;
 
 public class PlayerRepository : IPlayerRepository
 {
-    public void Register(string name)
+    public void RegisterIfNotExist(string name)
     {
         var playerExist = GetPlayerByName(name);
         if(playerExist != null)

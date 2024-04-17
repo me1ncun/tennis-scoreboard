@@ -10,9 +10,9 @@ public class PlayerService: IPlayerService
         _playerRepository = playerRepository;
     }
     
-    public void Register(string name)
+    public void RegisterIfNotExist(string name)
     {
-        _playerRepository.Register(name);
+        _playerRepository.RegisterIfNotExist(name);
     }
     
     public List<Player> GetAll()
