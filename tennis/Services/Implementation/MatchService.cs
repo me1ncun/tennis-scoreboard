@@ -30,6 +30,7 @@ public class MatchService
         {
             Match matchChanged = new Match()
             {
+                ID = match.ID,
                 Player1Name = GetNameById(match.Player1),
                 Player2Name = GetNameById(match.Player2),
                 WinnerName = GetNameById(match.Winner)
