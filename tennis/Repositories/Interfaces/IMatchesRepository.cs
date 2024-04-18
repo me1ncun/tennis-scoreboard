@@ -7,7 +7,6 @@ public interface IMatchesRepository
 {
     public void Create(int player1Id, int player2Id, int winnerId);
     public List<Match> GetAll();
-    public Match GetMatchByGuid(Guid id);
     public string GetNameById(int id);
     public int GetIdByName(string name);
     public List<Match> GetMatchesByPlayerName(string name);

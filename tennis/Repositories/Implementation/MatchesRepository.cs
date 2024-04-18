@@ -29,16 +29,6 @@ public class MatchesRepository: IMatchesRepository
         }
     }
     
-    public Match GetMatchByGuid(Guid id)
-    {
-        using (var connection = AppDbContext.CreateConnection())
-        {
-            string query = "SELECT * FROM [Matches] WHERE Id = @i";
-            
-            return connection.QueryFirstOrDefault<Match>(query, new { i = id });
-        }
-    }
-    
     public string GetNameById(int id)
     {
         using (var connection = AppDbContext.CreateConnection())
@@ -63,10 +53,9 @@ public class MatchesRepository: IMatchesRepository
     {
         using (var connection = AppDbContext.CreateConnection())
         {
-            string query = @"SELECT * 
-                         FROM Matches m 
-                         INNER JOIN Players p ON m.Player1 = p.ID OR m.Player2 = p.ID
-                         WHERE p.Name = @n";
+            string query = @"SELECT m.[ID], m.[Player1], m.[Player2], m.[Winner] FROM [TennisScoreboard].[dbo].Matches m 
+            INNER JOIN Players p ON m.Player1 = p.ID OR m.Player2 = p.ID
+            WHERE p.Name = @n;";
             
             return connection.Query<Match>(query, new { n = name }).ToList();
         }
