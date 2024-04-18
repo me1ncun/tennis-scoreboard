@@ -14,14 +14,4 @@ public class PlayerService: IPlayerService
     {
         _playerRepository.RegisterIfNotExist(name);
     }
-    
-    public List<Player> GetAll()
-    {
-        return _playerRepository.GetAllPlayers();
-    }
-    
-    public Player GetByName(string name)
-    {
-        return _playerRepository.GetPlayerByName(name);
-    }
 }
