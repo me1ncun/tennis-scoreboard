@@ -1,6 +1,4 @@
-﻿@using tennis_scoreboard.Models
-@*@model List<tennis_scoreboard.Models.Match>*@
-@model tennis.Models.MatchModel
+﻿@model List<tennis_scoreboard.Models.Match>
 
 @{
     ViewData["Title"] = "Matches";
@@ -38,52 +36,51 @@
                 </td>
             </tr>
 
-            @for (int i = 0; i < Model.Matches.Count(); i++)
+            @for (int i = 0; i < Model.Count(); i++)
             {
                 <tr>
                     <td>
                         <div class="id-column">
-                            <div class="table-header">@Model.Matches[i].ID</div>
+                            <div class="table-header">@Model[i].ID</div>
                         </div>
                     </td>
                     <td>
                         <div class="player1-column">
-                            <div class="table-header">@Model.Matches[i].Player1Name</div>
+                            <div class="table-header">@Model[i].Player1Name</div>
                         </div>
                     </td>
                     <td>
                         <div class="player2-column">
-                            <div class="table-header">@Model.Matches[i].Player2Name</div>
+                            <div class="table-header">@Model[i].Player2Name</div>
                         </div>
                     </td>
                     <td>
                         <div class="winner-column">
-                            <div class="table-header">@Model.Matches[i].WinnerName</div>
+                            <div class="table-header">@Model[i].WinnerName</div>
                         </div>
                     </td>
                 </tr>
             }
         </table>
     </div>
-    <div class="d-flex justify-content-center align-content-center" style="color: white; font-size: larger;">
-        @if (ViewData["TotalPages"] != null && (int)ViewData["TotalPages"] > 1)
-        {
-            <div>
-                Page:
-                @for (int i = 1; i <= (int)ViewData["TotalPages"]; i++)
+    @if (ViewData["TotalPages"] != null && (int)ViewData["TotalPages"] > 1)
+    {
+        <div class="d-flex justify-content-center align-content-center" style="color: white; font-size: larger;">
+            Page:
+            @for (int i = 1; i <= (int)ViewData["TotalPages"]; i++)
+            {
+                if (i == (int)ViewData["CurrentPage"])
                 {
-                    if (i == (int)ViewData["CurrentPage"])
-                    {
-                        <span>@i</span>
-                    }
-                    else
-                    {
-                        <a style="text-decoration: none;" href="/finished-matches?page=@i&filter_by_player_name=@ViewData["PlayerName"]">@i</a>
-                    }
+                    <span>@i</span>
                 }
-            </div>
-        }
-    </div>
+                else
+                {
+                    <a style="text-decoration: none;" href="/finished-matches?page=@i&filter_by_player_name=@ViewData["PlayerName"]">@i</a>
+                }
+            }
+        </div>
+    }
+
     <script>
                 function clearSearch() {
                     document.getElementById("playerNameInput").value = "";
