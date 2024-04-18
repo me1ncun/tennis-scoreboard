@@ -4,20 +4,19 @@ using tennis.Score.Score_system;
 
 namespace tennis_scoreboard.Models
 {
-    public class NewMatch
+    public class MatchScoreDTO
     {
         public Guid Id { get; set; }
-        public PlayerDTO Player1 { get; set; }
-        public PlayerDTO Player2 { get; set; }
+        public PlayerScoreDTO Player1 { get; set; }
+        public PlayerScoreDTO Player2 { get; set; }
         public State State { get; set; }
         
-        public NewMatch()
+        public MatchScoreDTO()
         {
-            this.Player1 = new PlayerDTO();
-            this.Player2 = new PlayerDTO();
+            this.Player1 = new PlayerScoreDTO();
+            this.Player2 = new PlayerScoreDTO();
             this.State = State.GAME;
         }
-
 
         public void SetGamePlayerOne(int point)
         {

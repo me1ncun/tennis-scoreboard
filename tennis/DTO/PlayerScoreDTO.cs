@@ -2,7 +2,7 @@
 
 namespace tennis_scoreboard.DTO;
 
-public class PlayerDTO
+public class PlayerScoreDTO
 {
     public string Name { get; set; }
     public Point Scores { get; set; }
