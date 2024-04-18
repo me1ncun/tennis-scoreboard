@@ -1,4 +1,4 @@
-﻿@model tennis_scoreboard.Models.NewMatch
+@model tennis_scoreboard.Models.MatchScoreDTO
 
 @{
     ViewData["Title"] = "Match Score";
@@ -50,8 +50,7 @@
                 <button type="submit" class="add-point-button">
                     Player 2 wins
                     point!
-                </button>
-            </div>
+                </button>            </div>
             <input type="hidden" name="selectedPlayer" value="Player2" />
         </form>
     </div>
