@@ -20,6 +20,7 @@ public class PlayerRepository : IPlayerRepository
                 try
                 {
                     string query = "INSERT INTO [Players] (Name) VALUES (@n);";
+                    
                     connection.Query(query, new { n = name });
                 }
                 catch (Exception e)
@@ -27,16 +28,6 @@ public class PlayerRepository : IPlayerRepository
                     Console.WriteLine(e.Message);
                 }
             }
-        }
-    }
-    
-    public List<Player> GetAllPlayers()
-    {
-        using (var connection = AppDbContext.CreateConnection())
-        {
-            string query = "SELECT * FROM [Players]";
-            
-            return connection.Query<Player>(query).ToList();
         }
     }
     
