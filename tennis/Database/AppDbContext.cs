@@ -1,9 +1,23 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Npgsql;
+using tennis_scoreboard.Models;
+using tennis.Extensions;
 
-public class AppDbContext
+public class AppDbContext : DbContext
 {
-    public static SqlConnection CreateConnection()
+    private IConfiguration Configuration;
+
+    public AppDbContext(IConfiguration configuration)
     {
-        return new SqlConnection("Data Source=.;Initial Catalog=TennisScoreboard;Integrated Security=true;Trust Server Certificate=true;");
+        Configuration = configuration;
     }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseNpgsql(Configuration.GetConnectionString("Database"));
+    }
+    
+    public DbSet<Player> Players { get; set; }
+    public DbSet<Match> Matches { get; set; }
 }
