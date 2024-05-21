@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using tennis_scoreboard.DTO;
 using tennis_scoreboard.Models;
@@ -14,9 +15,11 @@ namespace frontend.Controllers
         private readonly MatchService _matchService;
         private readonly MatchesUtil _matchesUtil;
         private readonly MatchScoreCalculationService _matchScoreCalculationService;
+        private readonly AppDbContext _context;
 
-        public HomeController(IPlayerService playerService, MatchService matchService, MatchesUtil matchesUtil)
+        public HomeController(IPlayerService playerService, MatchService matchService, MatchesUtil matchesUtil, AppDbContext context)
         {
+            _context = context;
             _playerService = playerService;
             _matchService = matchService;
             _matchesUtil = matchesUtil;
@@ -132,7 +135,7 @@ namespace frontend.Controllers
             ViewData["PlayerName"] = filter_by_player_name;
 
             List<Match> matches;
-            matches = _matchService.GetAllMatches().Skip((page - 1) * PageSize)
+            matches =  _matchService.GetAllMatches().Skip((page - 1) * PageSize)
                 .Take(PageSize)
                 .ToList();
 
