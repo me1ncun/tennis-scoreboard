@@ -1,6 +1,7 @@
 ﻿using System.Runtime.Intrinsics.X86;
 using Dapper;
 using frontend.Repositories;
+using Npgsql;
 using tennis_scoreboard.DTO;
 using tennis_scoreboard.Models;
 
@@ -8,56 +9,91 @@ namespace tennis.Database.Repositories.Implementation;
 
 public class MatchesRepository: IMatchesRepository
 {
-    public void Create(int player1Id, int player2Id, int winnerId)
+    private readonly IConfiguration _configuration;
+    private readonly string sqlString;
+    public MatchesRepository(IConfiguration configuration)
     {
-        using (var connection = AppDbContext.CreateConnection())
-        {
-            string query = @"INSERT INTO [Matches] (Player1, Player2, Winner)
-                                         VALUES (@p1, @p2, @w)";
-            
-            connection.Query<Match>(query, new { p1 = player1Id, p2 = player2Id, w = winnerId });
-        }
+        _configuration = configuration;
+        sqlString = _configuration.GetConnectionString("Database");
     }
     
-    public List<Match> GetAll()
+    public async Task Create(int player1Id, int player2Id, int winnerId)
     {
-        using (var connection = AppDbContext.CreateConnection())
+        using (NpgsqlConnection sqlCon = new NpgsqlConnection(sqlString))
         {
-            string query = "SELECT * FROM [Matches]";
-            
-            return  connection.Query<Match>(query).ToList();
-        }
-    }
-    
-    public string GetNameById(int id)
-    {
-        using (var connection = AppDbContext.CreateConnection())
-        {
-            string query = "SELECT Name FROM [Players] WHERE ID = @i";
-            
-            return connection.QueryFirstOrDefault<string>(query, new { i = id });
-        }
-    }
-    
-    public int GetIdByName(string name)
-    {
-        using (var connection = AppDbContext.CreateConnection())
-        {
-            string query = "SELECT [ID] FROM [Players] WHERE Name = @n";
-            
-            return connection.QueryFirstOrDefault<int>(query, new { n = name });
+            await sqlCon.OpenAsync();
+            string cmdString = $"INSERT INTO matches (\"player1\", \"player2\", \"winner\") VALUES (@p1, @p2, @w)";
+        
+            using (NpgsqlCommand sqlCmd = new NpgsqlCommand(cmdString, sqlCon))
+            {
+                sqlCmd.Parameters.AddWithValue("p1", player1Id);
+                sqlCmd.Parameters.AddWithValue("p2", player2Id);
+                sqlCmd.Parameters.AddWithValue("w", winnerId);
+
+                await sqlCmd.ExecuteNonQueryAsync();
+            } 
         }
     }
 
-    public List<Match> GetMatchesByPlayerName(string name)
+    public async Task<List<Match>> GetAll()
     {
-        using (var connection = AppDbContext.CreateConnection())
+        using (NpgsqlConnection sqlCon = new NpgsqlConnection(sqlString))
         {
-            string query = @"SELECT m.[ID], m.[Player1], m.[Player2], m.[Winner] FROM [TennisScoreboard].[dbo].Matches m 
-            INNER JOIN Players p ON m.Player1 = p.ID OR m.Player2 = p.ID
-            WHERE p.Name = @n;";
-            
-            return connection.Query<Match>(query, new { n = name }).ToList();
+            await sqlCon.OpenAsync();
+            string cmdString = $"SELECT * FROM matches";
+
+            using (NpgsqlCommand sqlCmd = new NpgsqlCommand(cmdString, sqlCon))
+            {
+                var list = new List<Match>();
+                using (var reader = await sqlCmd.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        var match = new Match
+                        {
+                            ID = reader.GetInt32(reader.GetOrdinal("id")),
+                            Player1 = reader.GetInt32(reader.GetOrdinal("player1")),
+                            Player2 = reader.GetInt32(reader.GetOrdinal("player2")),
+                            Winner = reader.GetInt32(reader.GetOrdinal("winner")),
+                        };
+                        list.Add(match);
+                    }
+                }
+
+                return list;
+            }
+        }
+    }
+
+    public async Task<List<Match>> GetMatchesByPlayerName(string name)
+    {
+        using (NpgsqlConnection sqlCon = new NpgsqlConnection(sqlString))
+        {
+            await sqlCon.OpenAsync();
+            string cmdString = $"SELECT m.ID, m.Player1, m.Player2, m.Winner FROM matches m'" +
+                               $"'INNER JOIN players p ON m.Player1 = p.ID OR m.Player2 = p.ID" +
+                               $"WHERE p.Name = @n;";
+
+            using (NpgsqlCommand sqlCmd = new NpgsqlCommand(cmdString, sqlCon))
+            {
+                var list = new List<Match>();
+                using (var reader = await sqlCmd.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        var match = new Match
+                        {
+                            ID = reader.GetInt32(reader.GetOrdinal("id")),
+                            Player1 = reader.GetInt32(reader.GetOrdinal("player1")),
+                            Player2 = reader.GetInt32(reader.GetOrdinal("player2")),
+                            Winner = reader.GetInt32(reader.GetOrdinal("winner")),
+                        };
+                        list.Add(match);
+                    }
+                }
+
+                return list;
+            }
         }
     }
 }
