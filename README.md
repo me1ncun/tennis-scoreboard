@@ -4,8 +4,8 @@
 
 - .NET 8.0
 - ASP.NET Core MVC
-- Dapper
-- Microsoft SQL Server
+- Docker
+- PostgreSQL
 
 ## Функционал приложения
 
