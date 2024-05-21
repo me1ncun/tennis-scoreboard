@@ -18,12 +18,12 @@ public class MatchService
         _playerRepository = playerRepository;
     }
     
-    public void CreateMatch(PlayerScoreDTO player1, PlayerScoreDTO player2, PlayerScoreDTO winner)
+    public async Task CreateMatch(PlayerScoreDTO player1, PlayerScoreDTO player2, PlayerScoreDTO winner)
     {
         // get ids of players and winner from db
-        var player1Id = _playerRepository.GetIdByName(player1.Name);
-        var player2Id =  _playerRepository.GetIdByName(player2.Name);
-        var winnerId = _playerRepository.GetIdByName(winner.Name);
+        var player1Id = await _playerRepository.GetIdByName(player1.Name);
+        var player2Id =  await _playerRepository.GetIdByName(player2.Name);
+        var winnerId =  await _playerRepository.GetIdByName(winner.Name);
         
         _matchesRepository.Create(player1Id.GetEnumerator().Current, player2Id.GetEnumerator().Current, winnerId.GetEnumerator().Current);
     }
@@ -35,12 +35,12 @@ public class MatchService
         // add player names to matches
         var matchesWithName = _matchesUtil.GetToWithNames(matches, this);
 
-        return matchesWithName;
+        return matchesWithName.Result.ToList();
     }
     
-    public string GetNameById(int id)
+    public async Task<IEnumerable<string>> GetNameById(int id)
     {
-        return _playerRepository.GetNameById(id).GetEnumerator().Current;
+        return await _playerRepository.GetNameById(id);
     }
     
     public List<Match> GetMatchesByPlayerName(string name)
@@ -49,6 +49,6 @@ public class MatchService
         // Add player names to matches
         var matchesWithName = _matchesUtil.GetToWithNames(matches, this);
         
-        return matchesWithName;
+        return matchesWithName.Result.ToList();
     }
 }

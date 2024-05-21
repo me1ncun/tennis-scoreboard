@@ -4,8 +4,8 @@ namespace frontend.Repositories;
 
 public interface IPlayerRepository
 {
-    public void RegisterIfNotExist(string name);
-    public IEnumerable<Player> GetPlayerByName(string name);
-    public IEnumerable<string> GetNameById(int id);
-    public IEnumerable<int> GetIdByName(string name);
+    public Task RegisterIfNotExist(string name);
+    public Task<IEnumerable<Player>> GetPlayerByName(string name);
+    public Task<IEnumerable<string>> GetNameById(int id);
+    public Task<IEnumerable<int>> GetIdByName(string name);
 }

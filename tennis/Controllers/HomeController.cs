@@ -45,11 +45,11 @@ namespace frontend.Controllers
         }
 
         [HttpPost("new-match")]
-        public IActionResult NewMatch(Registration registration)
+        public async Task<IActionResult> NewMatch(Registration registration)
         {
             // register players if they don't exist
-            _playerService.RegisterIfNotExist(registration.Player1Name);
-            _playerService.RegisterIfNotExist(registration.Player2Name);
+            await _playerService.RegisterIfNotExist(registration.Player1Name);
+            await _playerService.RegisterIfNotExist(registration.Player2Name);
 
             // create match object
             var match = _matchesUtil.GetToScoreDTO(registration);

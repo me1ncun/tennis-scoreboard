@@ -14,9 +14,9 @@ public class PlayerRepository : IPlayerRepository
         _configuration = configuration;
         sqlString = _configuration.GetConnectionString("Database");
     }
-    public void RegisterIfNotExist(string name)
+    public async Task RegisterIfNotExist(string name)
     {
-        var playerExist =  GetPlayerByName(name);
+        var playerExist = await GetPlayerByName(name);
         if (playerExist != null)
         {
             Console.WriteLine("User already exists");
@@ -25,40 +25,40 @@ public class PlayerRepository : IPlayerRepository
         {
             using (NpgsqlConnection connection = new NpgsqlConnection(sqlString))
             {
-                string query = "INSERT INTO players(name) VALUES (@n);";
+                string query = $"INSERT INTO players(name) VALUES (@n);";
 
                 connection.Query(query, new { n = name});
             }
         }
     }
 
-    public IEnumerable<Player> GetPlayerByName(string name)
+    public async Task<IEnumerable<Player>> GetPlayerByName(string name)
     {
         using (NpgsqlConnection connection = new NpgsqlConnection(sqlString))
         {
-            string query = "SELECT * FROM players WHERE (name) = @name;";
+            string query = $"SELECT * FROM players WHERE name = @n;";
 
-            return connection.Query<Player>(query, new { n = name});
+            return await connection.QueryAsync<Player>(query, new { n = name });
         }
     }
     
-    public IEnumerable<string> GetNameById(int id)
+    public async Task<IEnumerable<string>> GetNameById(int id)
     {
         using (NpgsqlConnection connection = new NpgsqlConnection(sqlString))
         {
-            string query = "SELECT (name) FROM players WHERE (id) = @id;";
+            string query = $"SELECT (name) FROM players WHERE (id) = @id;";
 
-            return connection.Query<string>(query, new { id = id});
+            return await connection.QueryAsync<string>(query, new { id = id});
         }
     }
     
-    public IEnumerable<int> GetIdByName(string name)
+    public async Task<IEnumerable<int>> GetIdByName(string name)
     {
         using (NpgsqlConnection connection = new NpgsqlConnection(sqlString))
         {
-            string query = "SELECT (id) FROM players WHERE (name) = @n;";
+            string query = $"SELECT (id) FROM players WHERE (name) = @n;";
 
-            return connection.Query<int>(query, new { n = name});
+            return await connection.QueryAsync<int>(query, new { n = name});
         }
     }
     
