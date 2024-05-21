@@ -1,7 +1,13 @@
 using frontend.Repositories;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Npgsql;
+using tennis;
 using tennis_scoreboard.Models;
 using tennis.Database.Repositories.Implementation;
 using tennis.Database.Services;
+using tennis.Extensions;
+using tennis.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,8 +15,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddTransient<MatchesUtil>();
 builder.Services.AddTransient<MatchService>();
-builder.Services.AddTransient<MatchScoreCalculationService>(NewMatch => new MatchScoreCalculationService(new NewMatch(), new MatchService(new MatchesRepository())));
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Database")));
+
 builder.Services.AddTransient<IPlayerRepository, PlayerRepository>();
 builder.Services.AddTransient<IPlayerService, PlayerService>();
 builder.Services.AddTransient<IMatchesRepository, MatchesRepository>();
@@ -26,6 +36,7 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+    app.ApplyMigrations();
 }
 
 app.UseHttpsRedirection();
