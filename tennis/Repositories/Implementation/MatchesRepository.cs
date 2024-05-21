@@ -17,83 +17,35 @@ public class MatchesRepository: IMatchesRepository
         sqlString = _configuration.GetConnectionString("Database");
     }
     
-    public async Task Create(int player1Id, int player2Id, int winnerId)
+    public void Create(int player1Id, int player2Id, int winnerId)
     {
-        using (NpgsqlConnection sqlCon = new NpgsqlConnection(sqlString))
+        using (NpgsqlConnection connection = new NpgsqlConnection(sqlString))
         {
-            await sqlCon.OpenAsync();
-            string cmdString = $"INSERT INTO matches (\"player1\", \"player2\", \"winner\") VALUES (@p1, @p2, @w)";
-        
-            using (NpgsqlCommand sqlCmd = new NpgsqlCommand(cmdString, sqlCon))
-            {
-                sqlCmd.Parameters.AddWithValue("p1", player1Id);
-                sqlCmd.Parameters.AddWithValue("p2", player2Id);
-                sqlCmd.Parameters.AddWithValue("w", winnerId);
+            string query = "INSERT INTO matches (player1, player2, winner) VALUES (@p1, @p2, @w);";
 
-                await sqlCmd.ExecuteNonQueryAsync();
-            } 
+            connection.Query(query, new { p1 = player1Id, p2 = player2Id, w = winnerId});
         }
     }
 
-    public async Task<List<Match>> GetAll()
+    public List<Match> GetAll()
     {
-        using (NpgsqlConnection sqlCon = new NpgsqlConnection(sqlString))
+        using (NpgsqlConnection connection = new NpgsqlConnection(sqlString))
         {
-            await sqlCon.OpenAsync();
-            string cmdString = $"SELECT * FROM matches";
+            string query = "SELECT * FROM matches;";
 
-            using (NpgsqlCommand sqlCmd = new NpgsqlCommand(cmdString, sqlCon))
-            {
-                var list = new List<Match>();
-                using (var reader = await sqlCmd.ExecuteReaderAsync())
-                {
-                    while (await reader.ReadAsync())
-                    {
-                        var match = new Match
-                        {
-                            ID = reader.GetInt32(reader.GetOrdinal("id")),
-                            Player1 = reader.GetInt32(reader.GetOrdinal("player1")),
-                            Player2 = reader.GetInt32(reader.GetOrdinal("player2")),
-                            Winner = reader.GetInt32(reader.GetOrdinal("winner")),
-                        };
-                        list.Add(match);
-                    }
-                }
-
-                return list;
-            }
+            return connection.Query<Match>(query).ToList();
         }
     }
 
-    public async Task<List<Match>> GetMatchesByPlayerName(string name)
+    public List<Match> GetMatchesByPlayerName(string name)
     {
-        using (NpgsqlConnection sqlCon = new NpgsqlConnection(sqlString))
+        using (NpgsqlConnection connection = new NpgsqlConnection(sqlString))
         {
-            await sqlCon.OpenAsync();
-            string cmdString = $"SELECT m.ID, m.Player1, m.Player2, m.Winner FROM matches m'" +
-                               $"'INNER JOIN players p ON m.Player1 = p.ID OR m.Player2 = p.ID" +
-                               $"WHERE p.Name = @n;";
+            string query = $"SELECT m.ID, m.Player1, m.Player2, m.Winner FROM matches m'" +
+                           $"'INNER JOIN players p ON m.Player1 = p.ID OR m.Player2 = p.ID" +
+                           $"WHERE p.Name = @n;";
 
-            using (NpgsqlCommand sqlCmd = new NpgsqlCommand(cmdString, sqlCon))
-            {
-                var list = new List<Match>();
-                using (var reader = await sqlCmd.ExecuteReaderAsync())
-                {
-                    while (await reader.ReadAsync())
-                    {
-                        var match = new Match
-                        {
-                            ID = reader.GetInt32(reader.GetOrdinal("id")),
-                            Player1 = reader.GetInt32(reader.GetOrdinal("player1")),
-                            Player2 = reader.GetInt32(reader.GetOrdinal("player2")),
-                            Winner = reader.GetInt32(reader.GetOrdinal("winner")),
-                        };
-                        list.Add(match);
-                    }
-                }
-
-                return list;
-            }
+            return connection.Query<Match>(query, new {n = name}).ToList();
         }
     }
 }

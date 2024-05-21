@@ -7,7 +7,7 @@ namespace tennis.Utils;
 
 public class MatchesUtil
 {
-    public async Task<List<Match>> GetToWithNames(List<Match> matchesWithId, MatchService _matchService)
+    public List<Match> GetToWithNames(List<Match> matchesWithId, MatchService _matchService)
     {
         List<Match> matchesWithName = new List<Match>();
         foreach (var match in matchesWithId)
@@ -15,9 +15,9 @@ public class MatchesUtil
             Match matchChanged = new Match()
             {
                 ID = match.ID,
-                Player1Name = await _matchService.GetNameById(match.Player1),
-                Player2Name = await _matchService.GetNameById(match.Player2),
-                WinnerName =  await _matchService.GetNameById(match.Winner)
+                Player1Name = _matchService.GetNameById(match.Player1),
+                Player2Name = _matchService.GetNameById(match.Player2),
+                WinnerName =  _matchService.GetNameById(match.Winner)
             };
             matchesWithName.Add(matchChanged);
         }

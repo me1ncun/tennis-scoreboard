@@ -14,109 +14,51 @@ public class PlayerRepository : IPlayerRepository
         _configuration = configuration;
         sqlString = _configuration.GetConnectionString("Database");
     }
-    public async Task RegisterIfNotExist(string name)
+    public void RegisterIfNotExist(string name)
     {
-        var playerExist = await GetPlayerByName(name);
+        var playerExist =  GetPlayerByName(name);
         if (playerExist != null)
         {
             Console.WriteLine("User already exists");
         }
         else
         {
-            using (NpgsqlConnection sqlCon = new NpgsqlConnection(sqlString))
+            using (NpgsqlConnection connection = new NpgsqlConnection(sqlString))
             {
-                await sqlCon.OpenAsync();
-                string cmdString = $"INSERT INTO players (name) VALUES (@name)";
-        
-                using (NpgsqlCommand sqlCmd = new NpgsqlCommand(cmdString, sqlCon))
-                {
-                    sqlCmd.Parameters.AddWithValue("name", name);
+                string query = "INSERT INTO players(name) VALUES (@n);";
 
-                    await sqlCmd.ExecuteNonQueryAsync();
-                } 
+                connection.Query(query, new { n = name});
             }
         }
     }
 
-    public async Task<Player> GetPlayerByName(string name)
+    public IEnumerable<Player> GetPlayerByName(string name)
     {
-        using (NpgsqlConnection sqlCon = new NpgsqlConnection(sqlString))
+        using (NpgsqlConnection connection = new NpgsqlConnection(sqlString))
         {
-            await sqlCon.OpenAsync();
-            string cmdString = $"SELECT * FROM players WHERE (name) = @name";
-        
-            using (NpgsqlCommand sqlCmd = new NpgsqlCommand(cmdString, sqlCon))
-            {
-                sqlCmd.Parameters.AddWithValue("name", name);
-                
-                using (var reader = await sqlCmd.ExecuteReaderAsync())
-                {
-                    if (await reader.ReadAsync())
-                    {
-                        return new Player
-                        {
-                            ID = reader.GetInt32(reader.GetOrdinal("id")),
-                            Name = reader.GetString(reader.GetOrdinal("name"))
-                        };
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-            } 
+            string query = "SELECT * FROM players WHERE (name) = @name;";
+
+            return connection.Query<Player>(query, new { n = name});
         }
     }
     
-    public async Task<string> GetNameById(int id)
+    public IEnumerable<string> GetNameById(int id)
     {
-        using (NpgsqlConnection sqlCon = new NpgsqlConnection(sqlString))
+        using (NpgsqlConnection connection = new NpgsqlConnection(sqlString))
         {
-            await sqlCon.OpenAsync();
-            string cmdString = $"SELECT (name) FROM players WHERE (id) = @id";
-        
-            using (NpgsqlCommand sqlCmd = new NpgsqlCommand(cmdString, sqlCon))
-            {
-                sqlCmd.Parameters.AddWithValue("id", id);
-                
-                using (var reader = await sqlCmd.ExecuteReaderAsync())
-                {
-                    if (await reader.ReadAsync())
-                    {
-                        return new string(reader.GetString(reader.GetOrdinal("name")));
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-            } 
+            string query = "SELECT (name) FROM players WHERE (id) = @id;";
+
+            return connection.Query<string>(query, new { id = id});
         }
     }
     
-    public async Task<int> GetIdByName(string name)
+    public IEnumerable<int> GetIdByName(string name)
     {
-        using (NpgsqlConnection sqlCon = new NpgsqlConnection(sqlString))
+        using (NpgsqlConnection connection = new NpgsqlConnection(sqlString))
         {
-            await sqlCon.OpenAsync();
-            string cmdString = $"SELECT (id) FROM players WHERE (name) = @n";
-        
-            using (NpgsqlCommand sqlCmd = new NpgsqlCommand(cmdString, sqlCon))
-            {
-                sqlCmd.Parameters.AddWithValue("n", name);
-                
-                using (var reader = await sqlCmd.ExecuteReaderAsync())
-                {
-                    if (await reader.ReadAsync())
-                    {
-                        return reader.GetInt32(reader.GetOrdinal("id"));
-                    }
-                    else
-                    {
-                        return -1;
-                    }
-                }
-            } 
+            string query = "SELECT (id) FROM players WHERE (name) = @n;";
+
+            return connection.Query<int>(query, new { n = name});
         }
     }
     
