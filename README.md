@@ -5,8 +5,8 @@
 - .NET 8.0
 - ASP.NET Core MVC
 - Dapper
-- Docker
 - PostgreSQL
+- Docker
 
 ## Переменные окружения
 
