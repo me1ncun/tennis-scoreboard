@@ -48,8 +48,8 @@ namespace frontend.Controllers
         public async Task<IActionResult> NewMatch(Registration registration)
         {
             // register players if they don't exist
-            await _playerService.RegisterIfNotExist(registration.Player1Name);
-            await _playerService.RegisterIfNotExist(registration.Player2Name);
+             _playerService.RegisterIfNotExist(registration.Player1Name);
+             _playerService.RegisterIfNotExist(registration.Player2Name);
 
             // create match object
             var match = _matchesUtil.GetToScoreDTO(registration);
@@ -124,10 +124,10 @@ namespace frontend.Controllers
         }
 
         [HttpGet("finished-matches")]
-        public IActionResult FinishedMatches(int page = 1, string filter_by_player_name = "")
+        public async Task<IActionResult> FinishedMatches(int page = 1, string filter_by_player_name = "")
         {
             const int PageSize = 5;
-            int totalMatchesCount = _matchService.GetAllMatches().Count;
+            int totalMatchesCount =  _matchService.GetAllMatches().Result.Count();
             int totalPages = (totalMatchesCount + PageSize - 1) / PageSize;
 
             ViewData["TotalPages"] = totalPages;
@@ -135,7 +135,7 @@ namespace frontend.Controllers
             ViewData["PlayerName"] = filter_by_player_name;
 
             List<Match> matches;
-            matches =  _matchService.GetAllMatches().Skip((page - 1) * PageSize)
+            matches =   _matchService.GetAllMatches().Result.Skip((page - 1) * PageSize)
                 .Take(PageSize)
                 .ToList();
 
@@ -143,10 +143,10 @@ namespace frontend.Controllers
         }
 
         [HttpPost("finished-matches")]
-        public IActionResult FinishedMatches(string searchedPlayer, int page = 1, string filter_by_player_name = "")
+        public async Task<IActionResult> FinishedMatches(string searchedPlayer, int page = 1, string filter_by_player_name = "")
         {
             const int PageSize = 5;
-            int totalMatchesCount = _matchService.GetMatchesByPlayerName(searchedPlayer).Count;
+            int totalMatchesCount = _matchService.GetMatchesByPlayerName(searchedPlayer).Result.Count();
             int totalPages = (totalMatchesCount + PageSize - 1) / PageSize;
 
             ViewData["TotalPages"] = totalPages;
@@ -154,7 +154,7 @@ namespace frontend.Controllers
             ViewData["PlayerName"] = searchedPlayer;
 
             List<Match> matches;
-            matches = _matchService.GetMatchesByPlayerName(searchedPlayer).Skip((page - 1) * PageSize)
+            matches =   _matchService.GetMatchesByPlayerName(searchedPlayer).Result.Skip((page - 1) * PageSize)
                 .Take(PageSize)
                 .ToList();
 
