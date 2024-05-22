@@ -7,45 +7,46 @@ using tennis_scoreboard.Models;
 
 namespace tennis.Database.Repositories.Implementation;
 
-public class MatchesRepository: IMatchesRepository
+public class MatchesRepository : IMatchesRepository
 {
     private readonly IConfiguration _configuration;
     private readonly string sqlString;
+
     public MatchesRepository(IConfiguration configuration)
     {
         _configuration = configuration;
         sqlString = _configuration.GetConnectionString("Database");
     }
-    
-    public void Create(int player1Id, int player2Id, int winnerId)
+
+    public async void Create(int player1Id, int player2Id, int winnerId)
     {
         using (NpgsqlConnection connection = new NpgsqlConnection(sqlString))
         {
-            string query = "INSERT INTO matches (player1, player2, winner) VALUES (@p1, @p2, @w);";
+            string query =
+                """INSERT INTO matches (player1, player2, winner) VALUES (@player1Id, @player2Id, @winnerId);""";
 
-            connection.Query(query, new { p1 = player1Id, p2 = player2Id, w = winnerId});
+            await connection.QueryFirstOrDefaultAsync(query, new { player1Id, player2Id, winnerId });
         }
     }
 
-    public List<Match> GetAll()
+    public async Task<IEnumerable<Match>> GetAll()
     {
         using (NpgsqlConnection connection = new NpgsqlConnection(sqlString))
         {
-            string query = "SELECT * FROM matches;";
+            string query = """SELECT * FROM matches;""";
 
-            return connection.Query<Match>(query).ToList();
+            return await connection.QueryAsync<Match>(query);
         }
     }
 
-    public List<Match> GetMatchesByPlayerName(string name)
+    public async Task<IEnumerable<Match>> GetMatchesByPlayerName(string name)
     {
         using (NpgsqlConnection connection = new NpgsqlConnection(sqlString))
         {
-            string query = $"SELECT m.ID, m.Player1, m.Player2, m.Winner FROM matches m'" +
-                           $"'INNER JOIN players p ON m.Player1 = p.ID OR m.Player2 = p.ID" +
-                           $"WHERE p.Name = @n;";
+            string query = @"
+            SELECT m.ID, m.Player1, m.Player2, m.Winner FROM matches m INNER JOIN players p ON m.Player1 = p.ID OR m.Player2 = p.ID WHERE p.Name = @name;";
 
-            return connection.Query<Match>(query, new {n = name}).ToList();
+            return await connection.QueryAsync<Match>(query, new { name });
         }
     }
 }

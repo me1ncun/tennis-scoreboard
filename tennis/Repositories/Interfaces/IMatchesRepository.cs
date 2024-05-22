@@ -6,6 +6,6 @@ namespace frontend.Repositories;
 public interface IMatchesRepository
 {
     public void Create(int player1Id, int player2Id, int winnerId);
-    public List<Match> GetAll();
-    public List<Match> GetMatchesByPlayerName(string name);
+    public Task<IEnumerable<Match>> GetAll();
+    public Task<IEnumerable<Match>> GetMatchesByPlayerName(string name);
 }

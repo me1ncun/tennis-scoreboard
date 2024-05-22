@@ -10,8 +10,8 @@ public class PlayerService: IPlayerService
         _playerRepository = playerRepository;
     }
     
-    public async Task RegisterIfNotExist(string name)
+    public void RegisterIfNotExist(string name)
     {
-        await _playerRepository.RegisterIfNotExist(name);
+         _playerRepository.RegisterIfNotExist(name);
     }
 }
