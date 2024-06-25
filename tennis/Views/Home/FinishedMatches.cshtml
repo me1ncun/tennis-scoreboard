@@ -1,4 +1,5 @@
-﻿@model List<tennis_scoreboard.Models.Match>
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model List<tennis.DTO.MatchDTO>
 
 @{
     ViewData["Title"] = "Matches";
@@ -46,17 +47,17 @@
                     </td>
                     <td>
                         <div class="player1-column">
-                            <div class="table-header">@Model[i].Player1Name</div>
+                            <div class="table-header">@Model[i].Player1</div>
                         </div>
                     </td>
                     <td>
                         <div class="player2-column">
-                            <div class="table-header">@Model[i].Player2Name</div>
+                            <div class="table-header">@Model[i].Player2</div>
                         </div>
                     </td>
                     <td>
                         <div class="winner-column">
-                            <div class="table-header">@Model[i].WinnerName</div>
+                            <div class="table-header">@Model[i].Winner</div>
                         </div>
                     </td>
                 </tr>
