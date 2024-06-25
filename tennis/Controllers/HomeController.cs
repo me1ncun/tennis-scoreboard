@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using tennis_scoreboard.DTO;
 using tennis_scoreboard.Models;
 using tennis.Database.Services;
+using tennis.DTO;
 using tennis.Score.Score_system;
 using tennis.Utils;
 
@@ -134,7 +135,7 @@ namespace frontend.Controllers
             ViewData["CurrentPage"] = page;
             ViewData["PlayerName"] = filter_by_player_name;
 
-            List<Match> matches;
+            List<MatchDTO> matches;
             matches =   _matchService.GetAllMatches().Result.Skip((page - 1) * PageSize)
                 .Take(PageSize)
                 .ToList();
@@ -153,7 +154,7 @@ namespace frontend.Controllers
             ViewData["CurrentPage"] = page;
             ViewData["PlayerName"] = searchedPlayer;
 
-            List<Match> matches;
+            List<MatchDTO> matches;
             matches =   _matchService.GetMatchesByPlayerName(searchedPlayer).Result.Skip((page - 1) * PageSize)
                 .Take(PageSize)
                 .ToList();
