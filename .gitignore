@@ -1,0 +1,14 @@
+**/.git
+**/.github
+**/.idea
+**/.vs
+**/pgadmin-data
+**/posgres-data
+**/publish
+.env
+script.sql
+tennis.sln
+tennis.sln.DotSettings.user
+**/bin
+**/obj
+tennis.csproj.user
