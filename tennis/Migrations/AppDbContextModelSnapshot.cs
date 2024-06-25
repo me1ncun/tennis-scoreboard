@@ -33,25 +33,13 @@ namespace tennis.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("player1");
 
-                    b.Property<string>("Player1Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<int>("Player2")
                         .HasColumnType("integer")
                         .HasColumnName("player2");
 
-                    b.Property<string>("Player2Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<int>("Winner")
                         .HasColumnType("integer")
                         .HasColumnName("winner");
-
-                    b.Property<string>("WinnerName")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.HasKey("ID");
 

@@ -2,6 +2,7 @@
 using tennis_scoreboard.DTO;
 using tennis_scoreboard.Models;
 using tennis.Database.Repositories.Implementation;
+using tennis.DTO;
 using tennis.Utils;
 
 namespace tennis.Database.Services;
@@ -28,7 +29,7 @@ public class MatchService
         _matchesRepository.Create(player1Id, player2Id, winnerId);
     }
     
-    public async Task<IEnumerable<Match>> GetAllMatches()
+    public async Task<IEnumerable<MatchDTO>> GetAllMatches()
     {
         // get all matches from db and get their id's
         var matches = await _matchesRepository.GetAll();
@@ -43,7 +44,7 @@ public class MatchService
         return await _playerRepository.GetNameById(id);
     }
     
-    public async Task<IEnumerable<Match>> GetMatchesByPlayerName(string name)
+    public async Task<IEnumerable<MatchDTO>> GetMatchesByPlayerName(string name)
     {
         var matches =  await _matchesRepository.GetMatchesByPlayerName(name);
         // Add player names to matches

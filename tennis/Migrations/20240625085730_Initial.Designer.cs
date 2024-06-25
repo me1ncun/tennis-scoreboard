@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace tennis.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240521104422_Initial")]
+    [Migration("20240625085730_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -43,19 +43,7 @@ namespace tennis.Migrations
                     b.Property<int>("Player2")
                         .HasColumnType("integer")
                         .HasColumnName("player2");
-
-                    b.Property<string>("Player2Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("Winner")
-                        .HasColumnType("integer")
-                        .HasColumnName("winner");
-
-                    b.Property<string>("WinnerName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
+                    
                     b.HasKey("ID");
 
                     b.ToTable("matches");
