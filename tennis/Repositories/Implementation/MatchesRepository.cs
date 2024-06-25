@@ -22,8 +22,7 @@ public class MatchesRepository : IMatchesRepository
     {
         using (NpgsqlConnection connection = new NpgsqlConnection(sqlString))
         {
-            string query =
-                """INSERT INTO matches (player1, player2, winner) VALUES (@player1Id, @player2Id, @winnerId);""";
+            string query = """INSERT INTO matches (player1, player2, winner) VALUES (@player1Id, @player2Id, @winnerId);""";
 
             await connection.QueryFirstOrDefaultAsync(query, new { player1Id, player2Id, winnerId });
         }
@@ -34,7 +33,7 @@ public class MatchesRepository : IMatchesRepository
         using (NpgsqlConnection connection = new NpgsqlConnection(sqlString))
         {
             string query = """SELECT * FROM matches;""";
-
+            
             return await connection.QueryAsync<Match>(query);
         }
     }

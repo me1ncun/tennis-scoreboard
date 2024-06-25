@@ -25,7 +25,7 @@ public class PlayerRepository : IPlayerRepository
         {
             using (NpgsqlConnection connection = new NpgsqlConnection(sqlString))
             {
-                string query = """INSERT INTO players(name) VALUES (@name)""";
+                string query = """INSERT INTO players(name) VALUES (@name);""";
 
                 await connection.QueryAsync(query, new { name });
             }
@@ -36,7 +36,7 @@ public class PlayerRepository : IPlayerRepository
     {
         using (NpgsqlConnection connection = new NpgsqlConnection(sqlString))
         {
-            string query = """SELECT * FROM players WHERE (name) = @name""";
+            string query = """SELECT * FROM players WHERE (name) = @name;""";
 
             return await connection.QuerySingleOrDefaultAsync<Player>(query, new { name });
         }

@@ -20,9 +20,6 @@ namespace tennis.Migrations
                     player1 = table.Column<int>(type: "integer", nullable: false),
                     player2 = table.Column<int>(type: "integer", nullable: false),
                     winner = table.Column<int>(type: "integer", nullable: false),
-                    Player1Name = table.Column<string>(type: "text", nullable: false),
-                    Player2Name = table.Column<string>(type: "text", nullable: false),
-                    WinnerName = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
