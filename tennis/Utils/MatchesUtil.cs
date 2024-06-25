@@ -1,23 +1,24 @@
-﻿using tennis_scoreboard.DTO;
+using tennis_scoreboard.DTO;
 using tennis_scoreboard.Models;
 using tennis.Database.Services;
+using tennis.DTO;
 using tennis.Score.Score_system;
 
 namespace tennis.Utils;
 
 public class MatchesUtil
 {
-    public async Task<IEnumerable<Match>> GetToWithNames(IEnumerable<Match> matchesWithId, MatchService _matchService)
+    public async Task<IEnumerable<MatchDTO>> GetToWithNames(IEnumerable<Match> matchesWithId, MatchService _matchService)
     {
-        List<Match> matchesWithName = new List<Match>();
+        List<MatchDTO> matchesWithName = new List<MatchDTO>();
         foreach (var match in matchesWithId)
         {
-            Match matchChanged = new Match()
+            MatchDTO matchChanged = new MatchDTO()
             {
                 ID = match.ID,
-                Player1Name = await _matchService.GetNameById(match.Player1),
-                Player2Name = await _matchService.GetNameById(match.Player2),
-                WinnerName =  await _matchService.GetNameById(match.Winner)
+                Player1 = await _matchService.GetNameById(match.Player1),
+                Player2 = await _matchService.GetNameById(match.Player2),
+                Winner =  await _matchService.GetNameById(match.Winner)
             };
             matchesWithName.Add(matchChanged);
         }

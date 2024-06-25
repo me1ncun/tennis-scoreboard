@@ -12,10 +12,6 @@ namespace tennis_scoreboard.Models
         [Column("player2")]
         public int Player2 { get; set; }
         [Column("winner")]
-        public int Winner { get; set; }
-        public string Player1Name { get; set; }
-        public string Player2Name { get; set; }
-        public string WinnerName { get; set; }
-        
+        public int Winner { get; set; }        
     }
 }
