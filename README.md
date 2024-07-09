@@ -7,6 +7,7 @@ http://51.20.248.214:8080/
 - Dapper
 - PostgreSQL
 - Docker
+- AWS EC2 (Deploy)
 
 ## Переменные окружения
 
